@@ -10,6 +10,40 @@ This program helps to place warehouses in a city by:
 - Keeping warehouses separated from each other
 - Placing warehouses near city center (not on edges)
 
+## Quick Start
+
+### Clone and Run
+
+1. **Clone this repository:**
+```bash
+git clone https://github.com/mshirazkamran/swarm-intelligence-example.git
+```
+
+2. **Navigate to the project directory:**
+```bash
+cd swarm-intelligence-example
+```
+
+3. **Install dependencies:**
+```bash
+pip install -r requirements.txt
+```
+
+4. **Run the program:**
+```bash
+python src/main.py
+```
+
+5. **Check the output:**
+   - View the generated image: `warehouse_solution.png`
+   - See warehouse coordinates in the terminal output
+
+### Get Started with Docker
+
+**🚧 Docker support is currently in development and will be available soon!**
+
+Stay tuned for containerized deployment options that will make setup even easier.
+
 ## Requirements
 
 You need to install these Python libraries:
@@ -26,16 +60,13 @@ pip install -r requirements.txt
 
 ## How to Run
 
-1. Open terminal/command prompt
-2. Go to the project folder
-3. Run the command:
+If you already have the project set up, simply run:
 
 ```bash
 python src/main.py
 ```
 
-4. Wait for the program to finish (takes about 1-2 minutes)
-5. Check the output image file: `warehouse_solution.png`
+**Note:** The program takes about 1-2 minutes to complete. Output will be saved as `warehouse_solution.png`.
 
 ## Basic Settings (Variables You Can Change)
 
