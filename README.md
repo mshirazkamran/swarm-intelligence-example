@@ -38,6 +38,14 @@ python src/main.py
    - View the generated image: `warehouse_solution.png`
    - See warehouse coordinates in the terminal output
 
+6. **(Optional) Generate animation:**
+```bash
+pip install manim
+python generate_animation.py --quality low
+```
+   - Creates video showing swarm optimization in action
+   - Video saved in `media/videos/animate_pso/` folder
+
 ### Get Started with Docker
 
 **🚧 Docker support is currently in development and will be available soon!**
@@ -67,6 +75,72 @@ python src/main.py
 ```
 
 **Note:** The program takes about 1-2 minutes to complete. Output will be saved as `warehouse_solution.png`.
+
+## 🎬 Animation Feature (NEW!)
+
+Visualize the swarm optimization process in action using Manim!
+
+### Quick Animation
+
+Generate a video showing particles searching for optimal warehouse locations:
+
+```bash
+python generate_animation.py
+```
+
+This creates a video in the `media/videos/animate_pso/` folder.
+
+### Animation Options
+
+**Different quality levels:**
+```bash
+# Low quality (fast, good for preview)
+python generate_animation.py --quality low
+
+# Medium quality
+python generate_animation.py --quality medium
+
+# High quality (recommended for presentations)
+python generate_animation.py --quality high
+
+# Production quality (best, but slow)
+python generate_animation.py --quality production
+```
+
+**Different scenes:**
+```bash
+# Main swarm animation (default)
+python generate_animation.py --scene PSOAnimation
+
+# Fitness convergence graph
+python generate_animation.py --scene FitnessConvergence
+
+# Generate both animations
+python generate_animation.py --scene both --quality high
+```
+
+### Animation Requirements
+
+The animation feature requires additional dependencies:
+
+```bash
+pip install manim
+```
+
+**Note:** Manim also requires FFmpeg and LaTeX. See [Manim installation guide](https://docs.manim.community/en/stable/installation.html) for system-specific setup.
+
+**For detailed animation instructions, see [ANIMATION_GUIDE.md](ANIMATION_GUIDE.md)**
+
+### What the Animation Shows
+
+The animation visualizes:
+- 🔵 **Blue dots**: Individual particles (candidate solutions) searching
+- 🟢 **Green circles**: Residential areas with safety zones
+- 🔴 **Red rectangles**: Army restricted zones
+- ⭐ **Yellow stars**: Best warehouse positions found
+- 📊 **Live fitness counter**: Shows solution quality improving over time
+
+**Tip:** Start with low quality (`-ql`) for quick previews. Use high quality (`-qh`) for final videos.
 
 ## Basic Settings (Variables You Can Change)
 
@@ -201,6 +275,29 @@ N_RESIDENTIAL = 30
 N_ARMY_ZONES = 10
 ```
 
+
+## Project Structure
+
+```
+warehouse-lab-mid/
+├── src/
+│   ├── main.py                  # Main PSO optimization program
+│   └── animate_pso.py           # Manim animation scenes
+├── generate_animation.py        # Helper script to generate animations
+├── requirements.txt             # Core dependencies
+├── requirements-animation.txt   # Animation-specific dependencies
+├── README.md                    # This file
+├── ANIMATION_GUIDE.md          # Detailed animation documentation
+├── TECHNICAL_SUMMARY.md        # Technical deep-dive
+├── warehouse_solution.png      # Output image (created after running)
+└── media/                      # Animation videos (created by manim)
+    └── videos/
+        └── animate_pso/
+            ├── 480p15/         # Low quality videos
+            ├── 720p30/         # Medium quality videos
+            ├── 1080p60/        # High quality videos
+            └── 1440p60/        # Production quality videos
+```
 
 ## Additional Notes
 

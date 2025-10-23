@@ -12,7 +12,7 @@ MAX_COORD = 1000
 CITY_SIZE = 1000
 
 # How many warehouses we need to place
-N_WAREHOUSES = 3
+N_WAREHOUSES = 4
 N_DIMENSIONS = N_WAREHOUSES * 2  # we need x,y for each warehouse (3 warehouses = 6 numbers)
 
 # Safety rules (minimum distances in kilometers)
@@ -20,31 +20,31 @@ D_MIN_RESIDENTIAL = 50.0   # warehouses must be this far from homes
 D_MIN_WAREHOUSE = 100.0    # warehouses must be this far from each other
 
 # Punishment values (big numbers to force following rules)
-PENALTY_ARMY_ZONE = 1e9       # very big punishment if warehouse goes in army area
-PENALTY_RESIDENTIAL_MIN = 1e6 # big punishment if too close to homes
-PENALTY_WAREHOUSE_MIN = 1e6   # big punishment if warehouses too close together
+PENALTY_ARMY_ZONE = 1_000_000_000       # very big punishment if warehouse goes in army area
+PENALTY_RESIDENTIAL_MIN = 1_000_000 # big punishment if too close to homes
+PENALTY_WAREHOUSE_MIN = 1_000_000   # big punishment if warehouses too close together
 
 # PSO algorithm settings (controls how particles search for best solution)
-N_PARTICLES = 40     # how many particles (possible solutions) to use
+N_PARTICLES = 50     # how many particles (possible solutions) to use
 N_ITERATIONS = 200   # how many times to repeat the search
 c1 = 1.5  # learning from own best position
 c2 = 1.5  # learning from group best position
 
 # Movement speed control (starts fast, ends slow)
 W_MAX = 0.9  # start with fast movement to explore
-W_MIN = 0.4  # end with slow movement to fine-tune
+W_MIN = 0.5  # end with slow movement to fine-tune
 
 # Importance weights (how much we care about different goals)
-ALPHA_WEIGHT = 0.5   # staying away from homes (medium importance)
-BETA_WEIGHT = 0.3    # staying away from other warehouses (low importance)
-GAMMA_WEIGHT = 1.0   # staying near city center (high importance)
+ALPHA_WEIGHT = 0.6   # staying away from homes (medium importance)
+BETA_WEIGHT = 0.5    # staying away from other warehouses (low importance)
+GAMMA_WEIGHT = 0.9   # staying near city center (high importance)
 
 # ============================================
 # SECTION 2: CREATE RANDOM LOCATIONS
 # ============================================
 
 # Create random residential (home) areas
-N_RESIDENTIAL = 15
+N_RESIDENTIAL = 10
 RESIDENTIAL_CENTERS = np.random.rand(N_RESIDENTIAL, 2) * CITY_SIZE
 
 # Create random army restricted zones
@@ -156,7 +156,7 @@ def calculate_fitness(particle):
 # SECTION 5: PSO ALGORITHM (MAIN OPTIMIZER)
 # ============================================
 
-def run_pso():
+def run_pso(record_animation=False):
     """Run particle swarm optimization to find best warehouse positions."""
     print("Initializing PSO swarm...")
     
@@ -177,6 +177,21 @@ def run_pso():
     
     # Keep history to see improvement over time
     gbest_history = [gbest_fitness]
+    
+    # Animation data storage (if recording)
+    animation_data = {
+        'positions_history': [],
+        'gbest_history_positions': [],
+        'pbest_positions_history': [],
+        'residential': RESIDENTIAL_CENTERS.copy(),
+        'army_zones': ARMY_ZONES.copy(),
+        'fitness_history': [gbest_fitness]
+    } if record_animation else None
+    
+    if record_animation and animation_data is not None:
+        animation_data['positions_history'].append(positions.copy())
+        animation_data['gbest_history_positions'].append(gbest_position.copy())
+        animation_data['pbest_positions_history'].append(pbest_positions.copy())
 
     print(f"Starting optimization for {N_ITERATIONS} iterations...")
     
@@ -222,6 +237,13 @@ def run_pso():
         # Save best fitness of this iteration
         gbest_history.append(gbest_fitness)
         
+        # Save animation data if recording
+        if record_animation and animation_data is not None:
+            animation_data['positions_history'].append(positions.copy())
+            animation_data['gbest_history_positions'].append(gbest_position.copy())
+            animation_data['pbest_positions_history'].append(pbest_positions.copy())
+            animation_data['fitness_history'].append(gbest_fitness)
+        
         # Print progress every 20 iterations
         if (it + 1) % 20 == 0:
             if gbest_fitness < 1e6:
@@ -230,6 +252,9 @@ def run_pso():
                 print(f"Iteration {it+1}/{N_ITERATIONS}, Best Fitness: (Still violating constraints)")
 
     print("\nOptimization Finished.")
+    
+    if record_animation:
+        return gbest_position, gbest_fitness, gbest_history, animation_data
     return gbest_position, gbest_fitness, gbest_history
 
 # ============================================
@@ -303,8 +328,9 @@ def plot_solution(best_solution, residential, army, history, gbest_fitness):
 # ============================================
 
 if __name__ == "__main__":
-    # Run the PSO algorithm
-    gbest_position, gbest_fitness, gbest_history = run_pso()
+    # Run the PSO algorithm (without animation recording)
+    result = run_pso()
+    gbest_position, gbest_fitness, gbest_history = result[0], result[1], result[2]
     
     # Show results
     print("\n--- OPTIMAL SOLUTION ---")

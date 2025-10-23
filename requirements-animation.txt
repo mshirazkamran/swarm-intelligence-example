@@ -1,0 +1,5 @@
+# Animation Requirements
+# Install these for the animation feature
+
+manim>=0.18.0
+
