@@ -170,16 +170,6 @@ N_RESIDENTIAL = 30
 N_ARMY_ZONES = 10
 ```
 
-## Project Structure
-
-```
-warehouse-lab-mid/
-├── src/
-│   └── main.py              # Main program file
-├── requirements.txt          # Python dependencies
-├── README.md                 # This file
-└── warehouse_solution.png   # Output image (created after running)
-```
 
 ## Additional Notes
 
